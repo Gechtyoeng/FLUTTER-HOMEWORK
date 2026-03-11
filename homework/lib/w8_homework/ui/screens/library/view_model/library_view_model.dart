@@ -3,9 +3,12 @@ import '../../../../data/repositories/songs/song_repository.dart';
 import '../../../states/player_state.dart';
 import '../../../../model/songs/song.dart';
 
+enum LibraryState { loading, error, success }
+
 class LibraryViewModel extends ChangeNotifier {
   final SongRepository songRepository;
   final PlayerState playerState;
+  LibraryState libraryState = LibraryState.loading;
   List<Song>? _songs;
 
   LibraryViewModel({required this.songRepository, required this.playerState}) {
@@ -16,7 +19,7 @@ class LibraryViewModel extends ChangeNotifier {
   }
 
   List<Song> get songs => _songs == null ? [] : _songs!;
-
+  String? errorMessage;
   @override
   void dispose() {
     playerState.removeListener(notifyListeners);
@@ -25,7 +28,16 @@ class LibraryViewModel extends ChangeNotifier {
 
   void _init() async {
     // 1 - Fetch songs
-    _songs = await songRepository.fetchSongs();
+    libraryState = LibraryState.loading;
+    notifyListeners();
+
+    try {
+      _songs = await songRepository.fetchSongs();
+      libraryState = LibraryState.success;
+    } catch (e) {
+      libraryState = LibraryState.error;
+      errorMessage = e.toString();
+    }
 
     // 2 - notify listeners
     notifyListeners();
