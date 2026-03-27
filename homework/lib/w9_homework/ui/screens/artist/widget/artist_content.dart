@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:w6_homework/w9_homework/ui/theme/theme.dart';
-import 'package:w6_homework/w9_homework/model/artists/song_artist.dart';
+import 'package:w6_homework/w9_homework/model/artists/artist.dart';
 import 'package:w6_homework/w9_homework/ui/screens/artist/view_model/artist_view_model.dart';
 import 'package:w6_homework/w9_homework/ui/screens/artist/widget/artist_tile.dart';
 import 'package:w6_homework/w9_homework/ui/utils/async_value.dart';
@@ -13,7 +13,7 @@ class ArtistContent extends StatelessWidget {
   Widget build(BuildContext context) {
     // call the view model
     ArtistViewModel mv = context.watch<ArtistViewModel>();
-    AsyncValue<List<SongArtist>> asyncValue = mv.artistValue;
+    AsyncValue<List<Artist>> asyncValue = mv.artistValue;
 
     Widget content;
     switch (asyncValue.state) {
@@ -27,7 +27,7 @@ class ArtistContent extends StatelessWidget {
         );
 
       case AsyncValueState.success:
-        List<SongArtist> artists = asyncValue.data!;
+        List<Artist> artists = asyncValue.data!;
         content = ListView.builder(
           itemCount: artists.length,
           itemBuilder: (context, index) => ArtistTile(artist: artists[index]),

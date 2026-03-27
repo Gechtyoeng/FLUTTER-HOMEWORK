@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:w6_homework/w9_homework/model/artists/song_artist.dart';
+import 'package:w6_homework/w9_homework/model/artists/artist.dart';
 
 class ArtistTile extends StatelessWidget {
-  final SongArtist artist;
+  final Artist artist;
   const ArtistTile({super.key, required this.artist});
 
   @override

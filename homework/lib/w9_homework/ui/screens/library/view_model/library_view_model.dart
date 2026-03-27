@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:w6_homework/w9_homework/data/repositories/artists/artist_repository.dart';
-import 'package:w6_homework/w9_homework/model/artists/song_artist.dart';
+import 'package:w6_homework/w9_homework/model/artists/artist.dart';
 import 'package:w6_homework/w9_homework/model/songs/song_with_artist.dart';
 import '../../../../data/repositories/songs/song_repository.dart';
 import '../../../states/player_state.dart';
@@ -39,7 +39,7 @@ class LibraryViewModel extends ChangeNotifier {
     try {
       // 2- Fetch both songs and artists
       List<Song> songs = await songRepository.fetchSongs();
-      List<SongArtist> artists = await artistRepository.fetchArtists();
+      List<Artist> artists = await artistRepository.fetchArtists();
 
       // create map
       final artistMap = {for (var artist in artists) artist.id: artist};
