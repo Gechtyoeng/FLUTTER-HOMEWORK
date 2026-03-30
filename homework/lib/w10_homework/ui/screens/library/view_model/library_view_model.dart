@@ -15,11 +15,7 @@ class LibraryViewModel extends ChangeNotifier {
 
   AsyncValue<List<LibraryItemData>> data = AsyncValue.loading();
 
-  LibraryViewModel({
-    required this.songRepository,
-    required this.playerState,
-    required this.artistRepository,
-  }) {
+  LibraryViewModel({required this.songRepository, required this.playerState, required this.artistRepository}) {
     playerState.addListener(notifyListeners);
 
     // init
@@ -54,20 +50,30 @@ class LibraryViewModel extends ChangeNotifier {
         mapArtist[artist.id] = artist;
       }
 
-      List<LibraryItemData> data = songs
-          .map(
-            (song) =>
-                LibraryItemData(song: song, artist: mapArtist[song.artistId]!),
-          )
-          .toList();
+      List<LibraryItemData> data = songs.map((song) => LibraryItemData(song: song, artist: mapArtist[song.artistId]!)).toList();
 
       this.data = AsyncValue.success(data);
-
     } catch (e) {
       // 3- Fetch is unsucessfull
       data = AsyncValue.error(e);
     }
     notifyListeners();
+  }
+
+  //Increment like count
+  void incrementLike(LibraryItemData item) async {
+    // 1. Increment locally
+    item.song.likeCount += 1;
+    notifyListeners();
+
+    try {
+      // 2. Patch updated count to Firebase
+      await songRepository.likeSong(item.song.id, item.song.likeCount);
+    } catch (e) {
+      // 3. Revert if patch fails
+      item.song.likeCount -= 1;
+      notifyListeners();
+    }
   }
 
   bool isSongPlaying(Song song) => playerState.currentSong == song;

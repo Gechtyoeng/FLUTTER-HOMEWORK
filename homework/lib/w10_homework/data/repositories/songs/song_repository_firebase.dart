@@ -1,16 +1,14 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:w6_homework/w10_homework/config/firebase_config.dart';
 
 import '../../../model/songs/song.dart';
 import '../../dtos/song_dto.dart';
 import 'song_repository.dart';
 
 class SongRepositoryFirebase extends SongRepository {
-  final Uri songsUri = Uri.https(
-    'test-a2a77-default-rtdb.asia-southeast1.firebasedatabase.app',
-    '/songs.json',
-  );
+  final Uri songsUri = FirebaseConfig.baseUri.replace(path: '/songs.json');
 
   @override
   Future<List<Song>> fetchSongs() async {
@@ -33,4 +31,14 @@ class SongRepositoryFirebase extends SongRepository {
 
   @override
   Future<Song?> fetchSongById(String id) async {}
+
+  @override
+  Future<void> likeSong(String id, int likeCount) async {
+    final Uri songUri = FirebaseConfig.baseUri.replace(path: '/songs/$id.json');
+    try {
+      await http.patch(songUri, body: json.encode({'likeCount': likeCount}));
+    } catch (e) {
+      throw Exception('Failed to patch like count: $e');
+    }
+  }
 }
