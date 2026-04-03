@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import '../view_model/library_item_data.dart';
 
 class LibraryItemTile extends StatelessWidget {
-  const LibraryItemTile({super.key, required this.data, required this.isPlaying, required this.onTap, required this.onLike});
+  const LibraryItemTile({super.key, required this.data, required this.isPlaying, required this.onTap, this.onLike});
 
   final LibraryItemData data;
   final bool isPlaying;
   final VoidCallback onTap;
-  final VoidCallback onLike;
+  final VoidCallback? onLike;
 
   @override
   Widget build(BuildContext context) {
